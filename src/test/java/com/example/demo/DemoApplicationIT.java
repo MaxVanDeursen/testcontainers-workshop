@@ -8,19 +8,32 @@ import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.testcontainers.containers.ComposeContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static io.restassured.RestAssured.given;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.is;
 
+import java.io.File;
+
+@Testcontainers
 class DemoApplicationIT {
+
+    @Container
+    static ComposeContainer composeContainer = new ComposeContainer(new File("docker-compose.yml"))
+            .withLocalCompose(true)
+            .withExposedService("app-1", 8080, Wait.forHttp("/actuator/health"));
+
     protected RequestSpecification requestSpecification = new RequestSpecBuilder()
-                .setPort(8080)
-                .addHeader(
-                        HttpHeaders.CONTENT_TYPE,
-                        MediaType.APPLICATION_JSON_VALUE
-                )
-                .build();
+        .setBaseUri(String.format("http://%s:%d", composeContainer.getServiceHost("app-1", 8080), composeContainer.getServicePort("app-1", 8080)))
+        .addHeader(
+                HttpHeaders.CONTENT_TYPE,
+                MediaType.APPLICATION_JSON_VALUE
+        )
+        .build();
 
     @Test
     void testSingleRating() {

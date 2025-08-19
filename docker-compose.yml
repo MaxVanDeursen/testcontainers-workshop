@@ -8,8 +8,8 @@ services:
       SPRING_DATASOURCE_URL: "jdbc:postgresql://db:5432/workshop"
       SPRING_DATASOURCE_USERNAME: "postgres"
       SPRING_DATASOURCE_PASSWORD: "example"
-    ports:
-      - "8080:8080"
+    expose:
+      - 8080
   db:
     image: "postgres:16-alpine"
     environment:
@@ -31,7 +31,7 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
       KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: "1"
     expose:
-      - 90903
+      - 9093
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     environment:

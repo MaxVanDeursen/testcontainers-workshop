@@ -10,7 +10,7 @@ static ComposeContainer composeContainer = new ComposeContainer(new File("docker
 ```
 
 You also need to add the `@Testcontainers` annotation to the test class, if you want the [Testcontainers-JUnit-Jupiter extension](https://www.testcontainers.org/test_framework_integration/junit_5/)
-to manage the container lifecycle (similar to how we did in step 8).
+to manage the container lifecycle.
 
 Finally, make sure to configure RestAssured to access the dynamic port exposed by Testcontainers:
 
